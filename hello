@@ -1,1 +1,1 @@
-dskjashpis
+npm install @react-stately/collections @react-stately/checkbox @react-aria/interactions @react-stately/slider @react-stately/tabs @react-stately/toggle --save
