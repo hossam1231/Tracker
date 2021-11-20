@@ -1,68 +1,70 @@
-import React from "react"
+import React from "react";
 import {
   Button,
   Modal,
   FormControl,
   Input,
+  IconButton,
+  Icon,
   Center,
   Text,
   Box,
   NativeBaseProvider,
-} from "native-base"
-import { useState } from "react"
-import { View } from 'react-native'
-import { CreateListItemRadio } from "./CreateListItemRadio"
-export default function CreateListItem() {
+} from "native-base";
+import { useState } from "react";
+import { View } from "react-native";
+import { CreateListForm } from "./CreateListForm";
+import { Entypo } from "@expo/vector-icons";
 
-
-  const [showModal, setShowModal] = useState(false)
-  const [page, setpage] = useState(1)
+export default function CreateListItem({ setlistItem }, listItem) {
+  const [showModal, setShowModal] = useState(false);
+  const [page, setpage] = useState(1);
   return (
     <>
-      <Button onPress={() => setShowModal(true)}>Button</Button>
+      <IconButton
+        onPress={() => setShowModal(true)}
+        icon={<Icon as={Entypo} name="emoji-happy" />}
+        borderRadius="full"
+        _icon={{
+          color: "orange.500",
+          size: "md",
+        }}
+        _hover={{
+          bg: "orange.600:alpha.20",
+        }}
+        __pressed={{
+          bg: "orange.600:alpha.20",
+          _icon: {
+            name: "emoji-flirt",
+          },
+          _ios: {
+            _icon: {
+              size: "2xl",
+            },
+          },
+        }}
+        _ios={{
+          _icon: {
+            size: "2xl",
+          },
+        }}
+      />
+
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content maxWidth="400px">
           <Modal.CloseButton />
           <Modal.Header>Create</Modal.Header>
-      
+
           <Modal.Body>
-
-
-
-
-{/* options */}
-<CreateListItemRadio/>
-
-
-o
-
-    
-          
+            {/* options */}
+            <CreateListForm
+              listItem={listItem}
+              setShowModal={setShowModal}
+              setlistItem={setlistItem}
+            />
           </Modal.Body>
-          <Modal.Footer>
-            <Button.Group space={2}>
-              <Button
-                variant="ghost"
-                colorScheme="blueGray"
-                onPress={() => {
-                  setShowModal(false)
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onPress={() => {
-                  setShowModal(false)
-                  
-                }}
-              >
-                Save
-              </Button>
-            </Button.Group>
-          </Modal.Footer>
         </Modal.Content>
       </Modal>
     </>
-  )
+  );
 }
-
