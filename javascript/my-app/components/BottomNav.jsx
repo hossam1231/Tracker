@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   NativeBaseProvider,
   Box,
@@ -15,16 +15,19 @@ import {
   Pressable,
 } from "native-base";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { PageContext } from "../context/PageContext";
+import Routines from "../pages/Routines";
 
 export default function BottomNav() {
-  const [page, setPage] = useContext(PageContext);
-  const [selected, setSelected] = React.useState(1);
+  const [selected, setSelected] = React.useState(0);
+
   return (
     <NativeBaseProvider>
-      <Box flex={1} bg="white" safeAreaTop>
-        <Center flex={1}></Center>
+      <Box w="100%" flex={1} bg="white" safeAreaTop>
+       
+        <Box>
+          <HStack w="100%">{selected == 0 && <Routines />}</HStack>
+        </Box>
+        <Center flex={1}> </Center>
         <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
           <Pressable
             cursor="pointer"
@@ -51,25 +54,6 @@ export default function BottomNav() {
           </Pressable>
           <Pressable
             cursor="pointer"
-            opacity={selected === 0 ? 1 : 0.5}
-            py="3"
-            flex={1}
-            onPress={() => setSelected(0)}
-          >
-            <Center>
-              <Icon
-                mb="1"
-                as={<Ionicons name="ios-shuffle" size={24} color="black" />}
-                color="white"
-                size="sm"
-              />
-              <Text color="white" fontSize="12">
-                Shuffle
-              </Text>
-            </Center>
-          </Pressable>
-          <Pressable
-            cursor="pointer"
             opacity={selected === 1 ? 1 : 0.5}
             py="2"
             flex={1}
@@ -78,18 +62,12 @@ export default function BottomNav() {
             <Center>
               <Icon
                 mb="1"
-                as={
-                  <Ionicons
-                    name="ios-heart-circle-outline"
-                    size={24}
-                    color="black"
-                  />
-                }
+                as={<MaterialIcons name="search" />}
                 color="white"
                 size="sm"
               />
               <Text color="white" fontSize="12">
-                Favorites
+                Search
               </Text>
             </Center>
           </Pressable>
@@ -103,12 +81,16 @@ export default function BottomNav() {
             <Center>
               <Icon
                 mb="1"
-                as={<Ionicons name="ios-bed" size={24} color="black" />}
+                as={
+                  <MaterialCommunityIcons
+                    name={selected === 2 ? "cart" : "cart-outline"}
+                  />
+                }
                 color="white"
                 size="sm"
               />
               <Text color="white" font="12">
-                Routines
+                Cart
               </Text>
             </Center>
           </Pressable>
@@ -117,7 +99,7 @@ export default function BottomNav() {
             opacity={selected === 3 ? 1 : 0.5}
             py="2"
             flex={1}
-            onPress={(() => setSelected(3), setPage("Routines"))}
+            onPress={() => setSelected(3)}
           >
             <Center>
               <Icon

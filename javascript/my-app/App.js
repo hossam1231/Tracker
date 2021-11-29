@@ -1,24 +1,25 @@
 import React from "react";
-import { NativeBaseProvider, extendTheme } from "native-base";
-
-import Router from "./Router";
-import { PageProvider } from "./context/PageContext";
-
-// Define the config
-const config = {
-  useSystemColorMode: false,
-  initialColorMode: "dark",
-};
-
-// extend the theme
-export const theme = extendTheme({ config });
+import {
+  Link,
+  HStack,
+  Center,
+  Heading,
+  Switch,
+  Box,
+  useColorMode,
+  NativeBaseProvider,
+  extendTheme,
+  VStack,
+  Code,
+} from "native-base";
+import { View, Text } from "react-native";
+import NativeBaseIcon from "./components/NativeBaseIcon";
+import BottomNav from "./components/BottomNav";
 
 export default function App() {
   return (
     <NativeBaseProvider>
-      <PageProvider>
-        <Router />
-      </PageProvider>
+      <BottomNav />
     </NativeBaseProvider>
   );
 }
