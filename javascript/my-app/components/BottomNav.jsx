@@ -23,7 +23,6 @@ export default function BottomNav() {
   return (
     <NativeBaseProvider>
       <Box w="100%" flex={1} bg="white" safeAreaTop>
-       
         <Box>
           <HStack w="100%">{selected == 0 && <Routines />}</HStack>
         </Box>
@@ -60,14 +59,14 @@ export default function BottomNav() {
             onPress={() => setSelected(1)}
           >
             <Center>
-              <Icon
+              {/* <Icon
                 mb="1"
                 as={<MaterialIcons name="search" />}
                 color="white"
                 size="sm"
-              />
+              /> */}
               <Text color="white" fontSize="12">
-                Search
+                Rotuines
               </Text>
             </Center>
           </Pressable>

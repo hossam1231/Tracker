@@ -18,6 +18,7 @@ import {
   Center,
   Pressable,
   IconButton,
+  ScrollView,
 } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -77,58 +78,97 @@ const Routines = () => {
   };
 
   return (
-    <Flex
-      justifyContent="space-evenly"
-      margin="10px"
-      w="100%"
-      direction="row"
-      wrap="wrap"
-    >
-      <Box>
-        {routines.map((routine, index) => (
-          <Routine
-            key={index}
-            index={index}
-            routines={routines}
-            setRoutines={setRoutines}
-            routine={routine}
-          />
-        ))}
-        <CreateRoutine routines={routines} setRoutines={setRoutines} />
-      </Box>
+    // <Flex
+    //   justifyContent="space-evenly"
+    //   margin="10px"
+    //   w="100%"
+    //   direction="row"
+    //   wrap="wrap"
+    // >
+    //   <Box>
+    //     {routines.map((routine, index) => (
+    //       <Routine
+    //         key={index}
+    //         index={index}
+    //         routines={routines}
+    //         setRoutines={setRoutines}
+    //         routine={routine}
+    //       />
+    //     ))}
+    //     <CreateRoutine routines={routines} setRoutines={setRoutines} />
+    //   </Box>
 
-      <VStack>
-        <ProgressChart
-          data={data}
-          width={600}
-          height={400}
-          strokeWidth={16}
-          radius={32}
-          chartConfig={{
-            backgroundColor: "#4e47e5",
-            backgroundGradientFrom: "#4e47e5",
-            backgroundGradientTo: "#4e47e5",
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#ffa726",
-            },
-          }}
-          bezier
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-          }}
-          hideLegend={false}
-        />
+    //   <VStack>
+    //     <ProgressChart
+    //       data={data}
+    //       width={600}
+    //       height={400}
+    //       strokeWidth={16}
+    //       radius={32}
+    //       chartConfig={{
+    //         backgroundColor: "#4e47e5",
+    //         backgroundGradientFrom: "#4e47e5",
+    //         backgroundGradientTo: "#4e47e5",
+    //         decimalPlaces: 2, // optional, defaults to 2dp
+    //         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    //         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    //         style: {
+    //           borderRadius: 16,
+    //         },
+    //         propsForDots: {
+    //           r: "6",
+    //           strokeWidth: "2",
+    //           stroke: "#ffa726",
+    //         },
+    //       }}
+    //       bezier
+    //       style={{
+    //         marginVertical: 8,
+    //         borderRadius: 16,
+    //       }}
+    //       hideLegend={false}
+    //     />
+    //   </VStack>
+    // </Flex>
+
+    <Center margin="10px" w="100%">
+      <Heading>Routines</Heading>
+      {/* <ScrollView w="100%"> */}
+
+      <VStack margin="10px" space={3} w="100%">
+        {/* <HStack w="100%">
+          <Box>
+            <Center>
+              <VStack>
+                <Text>Add some to favorutes</Text>
+              </VStack>
+            </Center>
+          </Box>
+        </HStack> */}
+
+        <Text bold ml="10px">
+          All Routines
+        </Text>
+        <HStack w="100%" direction="row" wrap="wrap">
+          <ScrollView flex="1" flexGrow="1" horizontal>
+            <HStack margin="10px">
+              {routines.map((routine, index) => (
+                <Routine
+                  key={index}
+                  index={index}
+                  routines={routines}
+                  setRoutines={setRoutines}
+                  routine={routine}
+                />
+              ))}
+            </HStack>
+            <CreateRoutine routines={routines} setRoutines={setRoutines} />
+          </ScrollView>
+        </HStack>
       </VStack>
-    </Flex>
+
+      {/* </ScrollView> */}
+    </Center>
   );
 };
 
@@ -169,99 +209,91 @@ export const CreateRoutine = (props) => {
   };
 
   return (
-    <HStack jusitifyContent="space-evenly">
-      <VStack w="50%">
-        <Box margin="10px" w="75px" h="75px">
-          <IconButton
-            h="75px"
-            w="75px"
-            borderRadius="full"
-            onPress={() => setShowModal(true)}
-            icon={<Icon as={Feather} name="plus" size="sm" />}
-          />
+    <Box maxW="40" margin="10px">
+      <Center>
+        <IconButton
+          h="75px"
+          w="75px"
+          borderRadius="full"
+          onPress={() => setShowModal(true)}
+          icon={<Icon as={Feather} name="plus" size="sm" />}
+        />
+      </Center>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content maxWidth="400px">
+          <Modal.CloseButton />
 
-          <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-            <Modal.Content maxWidth="400px">
-              <Modal.CloseButton />
+          <Modal.Body mt="40px">
+            <Box>
+              <FormControl>
+                <Input placeholder="name" onChangeText={(v) => setName(v)} />
+              </FormControl>
+              {!tag && (
+                <Button
+                  onPress={() => {
+                    setEditMode(!editMode);
+                  }}
+                  mt="20px"
+                >
+                  Add tag..
+                </Button>
+              )}
 
-              <Modal.Body mt="40px">
-                <Box>
-                  <FormControl>
+              {editMode == true && (
+                <>
+                  <HStack mt="20px" space={2}>
                     <Input
-                      placeholder="name"
-                      onChangeText={(v) => setName(v)}
+                      flex={1}
+                      onChangeText={(v) => setTagName(v)}
+                      placeholder="Add Tag"
                     />
-                  </FormControl>
-                  {!tag && (
-                    <Button
+                    <IconButton
+                      borderRadius="sm"
+                      variant="solid"
+                      icon={
+                        <Icon
+                          as={Feather}
+                          name="plus"
+                          size="sm"
+                          color="warmGray.50"
+                        />
+                      }
                       onPress={() => {
-                        setEditMode(!editMode);
+                        setTag(tagName);
+                        setEditMode(false);
                       }}
-                      mt="20px"
-                    >
-                      Add tag..
-                    </Button>
-                  )}
+                    />
+                  </HStack>
+                </>
+              )}
+            </Box>
 
-                  {editMode == true && (
-                    <>
-                      <HStack mt="20px" space={2}>
-                        <Input
-                          flex={1}
-                          onChangeText={(v) => setTagName(v)}
-                          placeholder="Add Tag"
-                        />
-                        <IconButton
-                          borderRadius="sm"
-                          variant="solid"
-                          icon={
-                            <Icon
-                              as={Feather}
-                              name="plus"
-                              size="sm"
-                              color="warmGray.50"
-                            />
-                          }
-                          onPress={() => {
-                            setTag(tagName);
-                            setEditMode(false);
-                          }}
-                        />
-                      </HStack>
-                    </>
-                  )}
-                </Box>
-
-                <HStack mt="30px">{tag && <Badge>{tag}</Badge>}</HStack>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button.Group space={2}>
-                  <Button
-                    onPress={() => {
-                      setRoutines((routines) => [
-                        {
-                          UUID: Math.round(Math.random() * 100),
-                          name: name,
-                          tag: tag,
-                          tasks: [],
-                        },
-                        ...routines,
-                      ]);
-                      setTag("");
-                      setShowModal(false);
-                    }}
-                  >
-                    Create
-                  </Button>
-                </Button.Group>
-              </Modal.Footer>
-            </Modal.Content>
-          </Modal>
-        </Box>
-      </VStack>
-
-      <VStack w="50%"></VStack>
-    </HStack>
+            <HStack mt="30px">{tag && <Badge>{tag}</Badge>}</HStack>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                onPress={() => {
+                  setRoutines((routines) => [
+                    {
+                      UUID: Math.round(Math.random() * 100),
+                      name: name,
+                      tag: tag,
+                      tasks: [],
+                    },
+                    ...routines,
+                  ]);
+                  setTag("");
+                  setShowModal(false);
+                }}
+              >
+                Create
+              </Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+    </Box>
   );
 };
 
