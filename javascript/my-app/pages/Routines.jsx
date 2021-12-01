@@ -162,7 +162,9 @@ const Routines = () => {
                 />
               ))}
             </HStack>
-            <CreateRoutine routines={routines} setRoutines={setRoutines} />
+            <Center>
+              <CreateRoutine routines={routines} setRoutines={setRoutines} />
+            </Center>
           </ScrollView>
         </HStack>
       </VStack>

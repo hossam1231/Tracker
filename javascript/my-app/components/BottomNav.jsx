@@ -63,7 +63,7 @@ export default function BottomNav() {
           >
             <Center>
               <Text color="white" font="12">
-                Cart
+                Tracker
               </Text>
             </Center>
           </Pressable>
