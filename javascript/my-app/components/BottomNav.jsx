@@ -36,16 +36,6 @@ export default function BottomNav() {
             onPress={() => setSelected(0)}
           >
             <Center>
-              <Icon
-                mb="1"
-                as={
-                  <MaterialCommunityIcons
-                    name={selected === 0 ? "home" : "home-outline"}
-                  />
-                }
-                color="white"
-                size="sm"
-              />
               <Text color="white" fontSize="12">
                 Home
               </Text>
@@ -59,12 +49,6 @@ export default function BottomNav() {
             onPress={() => setSelected(1)}
           >
             <Center>
-              {/* <Icon
-                mb="1"
-                as={<MaterialIcons name="search" />}
-                color="white"
-                size="sm"
-              /> */}
               <Text color="white" fontSize="12">
                 Rotuines
               </Text>
@@ -78,16 +62,6 @@ export default function BottomNav() {
             onPress={() => setSelected(2)}
           >
             <Center>
-              <Icon
-                mb="1"
-                as={
-                  <MaterialCommunityIcons
-                    name={selected === 2 ? "cart" : "cart-outline"}
-                  />
-                }
-                color="white"
-                size="sm"
-              />
               <Text color="white" font="12">
                 Cart
               </Text>
@@ -101,16 +75,6 @@ export default function BottomNav() {
             onPress={() => setSelected(3)}
           >
             <Center>
-              <Icon
-                mb="1"
-                as={
-                  <MaterialCommunityIcons
-                    name={selected === 3 ? "account" : "account-outline"}
-                  />
-                }
-                color="white"
-                size="sm"
-              />
               <Text color="white" fontSize="12">
                 Account
               </Text>
