@@ -16,6 +16,7 @@ import {
 } from "native-base";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import Routines from "../pages/Routines";
+import Home from "../pages/Home";
 
 export default function BottomNav() {
   const [selected, setSelected] = React.useState(0);
@@ -24,7 +25,10 @@ export default function BottomNav() {
     <NativeBaseProvider>
       <Box w="100%" flex={1} bg="white" safeAreaTop>
         <Box>
-          <HStack w="100%">{selected == 0 && <Routines />}</HStack>
+          <HStack w="100%">
+            {selected == 0 && <Home />}
+            {selected == 1 && <Routines />}
+          </HStack>
         </Box>
         <Center flex={1}> </Center>
         <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
@@ -50,7 +54,7 @@ export default function BottomNav() {
           >
             <Center>
               <Text color="white" fontSize="12">
-                Rotuines
+                Routines
               </Text>
             </Center>
           </Pressable>
@@ -62,7 +66,7 @@ export default function BottomNav() {
             onPress={() => setSelected(2)}
           >
             <Center>
-              <Text color="white" font="12">
+              <Text color="white" fontSize="12">
                 Tracker
               </Text>
             </Center>
