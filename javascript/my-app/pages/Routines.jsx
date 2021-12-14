@@ -72,80 +72,11 @@ const Routines = () => {
     setRoutines(jsonValue);
   };
 
-  const data = {
-    labels: ["Swim", "Bike", "Run", "Bike", "Run"], // optional
-    data: [0.4, 0.6, 0.8, 0.6, 0.8],
-  };
-
   return (
-    // <Flex
-    //   justifyContent="space-evenly"
-    //   margin="10px"
-    //   w="100%"
-    //   direction="row"
-    //   wrap="wrap"
-    // >
-    //   <Box>
-    //     {routines.map((routine, index) => (
-    //       <Routine
-    //         key={index}
-    //         index={index}
-    //         routines={routines}
-    //         setRoutines={setRoutines}
-    //         routine={routine}
-    //       />
-    //     ))}
-    //     <CreateRoutine routines={routines} setRoutines={setRoutines} />
-    //   </Box>
-
-    //   <VStack>
-    //     <ProgressChart
-    //       data={data}
-    //       width={600}
-    //       height={400}
-    //       strokeWidth={16}
-    //       radius={32}
-    //       chartConfig={{
-    //         backgroundColor: "#4e47e5",
-    //         backgroundGradientFrom: "#4e47e5",
-    //         backgroundGradientTo: "#4e47e5",
-    //         decimalPlaces: 2, // optional, defaults to 2dp
-    //         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    //         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    //         style: {
-    //           borderRadius: 16,
-    //         },
-    //         propsForDots: {
-    //           r: "6",
-    //           strokeWidth: "2",
-    //           stroke: "#ffa726",
-    //         },
-    //       }}
-    //       bezier
-    //       style={{
-    //         marginVertical: 8,
-    //         borderRadius: 16,
-    //       }}
-    //       hideLegend={false}
-    //     />
-    //   </VStack>
-    // </Flex>
-
     <Center margin="10px" w="100%">
       <Heading>Routines</Heading>
-      {/* <ScrollView w="100%"> */}
 
       <VStack margin="10px" space={3} w="100%">
-        {/* <HStack w="100%">
-          <Box>
-            <Center>
-              <VStack>
-                <Text>Add some to favorutes</Text>
-              </VStack>
-            </Center>
-          </Box>
-        </HStack> */}
-
         <Text bold ml="10px">
           All Routines
         </Text>
@@ -169,7 +100,6 @@ const Routines = () => {
         </HStack>
       </VStack>
 
-      {/* </ScrollView> */}
     </Center>
   );
 };

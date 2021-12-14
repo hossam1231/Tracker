@@ -24,18 +24,27 @@ import {
   StackedBarChart,
 } from "react-native-chart-kit";
 
+import { Dimensions } from "react-native";
+
 const Home = () => {
+  const windowWidth = Dimensions.get("window").width;
+  const windowHeight = Dimensions.get("window").height;
+
   const data = {
     labels: ["Swim", "Bike", "Run", "Bike", "Run"], // optional
     data: [0.4, 0.6, 0.8, 0.6, 0.8],
   };
+  useEffect(() => {
+    console.log(windowWidth);
+    console.log(windowHeight / 4);
+  }, []);
 
   return (
     <VStack m="20px" w="100%" flex="1" h="100%">
       <ProgressChart
         data={data}
-        width={800}
-        height={600}
+        width={windowWidth / 1.1}
+        height={windowHeight / 2.2}
         strokeWidth={16}
         radius={32}
         chartConfig={{

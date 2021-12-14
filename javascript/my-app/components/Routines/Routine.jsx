@@ -24,9 +24,21 @@ import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Feather, Entypo, MaterialIcons } from "@expo/vector-icons";
 
 const Routine = (props) => {
+  //   tasks modal
+  const [showModal, setShowModal] = useState(false);
+
+  const [tasks, setTasks] = useState([]);
+  //   send tasks up to have all the tasks and id by uuid
+  const [routineProgress, setRoutineProgress] = useState(0);
+
+  useLayoutEffect(() => {
+    //   map each task and seee if iscompelted is true
+    let x = 4;
+    setRoutineProgress(tasks.length / x);
+  }, [tasks]);
+
   const { routine, routines, setRoutines, index } = props;
   const { name, tag, key } = routine;
-  let completedPercentage = 12;
 
   return (
     <Box
@@ -53,11 +65,11 @@ const Routine = (props) => {
           <AnimatedCircularProgress
             size={70}
             width={10}
-            fill={completedPercentage}
+            fill={routineProgress}
             tintColor="#f0f0fd"
             backgroundColor="#726deb"
           >
-            {(completedPercentage) => <Text>%{completedPercentage}</Text>}
+            {(routineProgress) => <Text>%{routineProgress}</Text>}
           </AnimatedCircularProgress>
         </Center>
         {tag && (
@@ -83,9 +95,7 @@ const Routine = (props) => {
       </Box>
       <Stack p="4" space={3}>
         <Stack space={2}>
-          <Heading size="md" ml="-1">
-            {name}
-          </Heading>
+          <TasksModal name={name} />
         </Stack>
 
         {/* <HStack alignItems="center" space={4} justifyContent="space-between">
@@ -97,14 +107,86 @@ const Routine = (props) => {
   );
 };
 
+export const TasksModal = (props) => {
+  const [showModal, setShowModal] = useState(false);
+  const { name } = props;
+  return (
+    <>
+      <Button onPress={() => setShowModal(true)}>
+        <Heading size="md" ml="-1">
+          {name}
+        </Heading>
+      </Button>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content maxWidth="400px">
+          <Modal.CloseButton />
+          <Modal.Header>Contact Us</Modal.Header>
+          <Modal.Body>
+            <TodoList />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="ghost"
+                colorScheme="blueGray"
+                onPress={() => {
+                  setShowModal(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onPress={() => {
+                  setShowModal(false);
+                }}
+              >
+                Save
+              </Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+    </>
+  );
+};
+
+export const Settings = (props) => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <IconButton
+        onPress={() => setShowModal(true)}
+        icon={<Feather name="settings" size={24} color="black" />}
+      />
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content maxWidth="400px">
+          <Modal.Body>
+            <Button>Delete</Button>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
+    </>
+  );
+};
+
 export default Routine;
+
+// useEffect(() => {
+//   console.log("NEW ROUTINES", routines);
+// }, [routines]);
+
+// const deleteRoutine = () => {
+//   let filteredArray = routines.filter((routine) => routine.UUID !== UUID);
+//   setRoutines(filteredArray);
+// };
 
 // const Routine = (props) => {
 //   const [tasks, setTasks] = useState([]);
 //   const [completed, setCompleted] = useState(0);
 //   const [progress, setProgress] = useState(0);
 //   const [favorite, setFavorite] = useState(false);
-//   const [showModal, setShowModal] = useState(false);
 //   const [completedPercentage, setCompletedPercentage] = useState(0);
 //   const { routine, routines, setRoutines, index } = props;
 //   const { name, tag, UUID, key } = routine;
@@ -210,15 +292,7 @@ export default Routine;
 //     //         </HStack>
 //     //       </VStack>
 //     //     </HStack>
-//     //     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-//     //       <Modal.Content maxWidth="400px">
-//     //         <Modal.CloseButton />
-
-//     //         <Modal.Body>
-//     //           <TodoList tasks={tasks} setTasks={setTasks} routine={routine} />
-//     //         </Modal.Body>
-//     //       </Modal.Content>
-//     //     </Modal>
+//     //
 //     //   </Box>
 //     //   <HStack justifyContent="space-between">
 //     //     <Button onPress={() => setShowModal(true)} variant="ghost">
@@ -297,78 +371,78 @@ export default Routine;
 //   );
 // };
 
-// export const TodoList = (props) => {
-//   const [inputValue, setInputValue] = useState("");
-//   const [editMode, setEditMode] = useState(false);
-//   const { routine, tasks, setTasks } = props;
-//   const { name } = routine;
+export const TodoList = (props) => {
+  const [inputValue, setInputValue] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const { routine, tasks, setTasks } = props;
+  const { name } = routine;
 
-//   return (
-//     <Box>
-//       <HStack>
-//         <Heading mb="5">{name}</Heading>
-//         {editMode == false && (
-//           <IconButton
-//             onPress={() => {
-//               setEditMode(!editMode);
-//             }}
-//             icon={<MaterialIcons name="edit" size={24} />}
-//           />
-//         )}
-//         {editMode == true && (
-//           <IconButton
-//             onPress={() => {
-//               setEditMode(!editMode);
-//             }}
-//             icon={<MaterialIcons name="edit-off" size={24} />}
-//           />
-//         )}
-//       </HStack>
-//       <VStack space={4}>
-//         {editMode == true && (
-//           <HStack space={2}>
-//             <Input
-//               flex={1}
-//               onChangeText={(v) => setInputValue(v)}
-//               value={inputValue}
-//               placeholder="Add Task"
-//             />
-//             <IconButton
-//               borderRadius="sm"
-//               variant="solid"
-//               icon={
-//                 <Icon as={Feather} name="plus" size="sm" color="warmGray.50" />
-//               }
-//               onPress={() => {
-//                 setTasks((tasks) => [
-//                   ...tasks,
-//                   {
-//                     name: inputValue,
-//                     isCompleted: false,
-//                     taskUUID: Math.round(Math.random() * 100),
-//                   },
-//                 ]);
-//                 setInputValue("");
-//               }}
-//             />
-//           </HStack>
-//         )}
+  return (
+    <Box>
+      <HStack>
+        <Heading mb="5">{name}</Heading>
+        {editMode == false && (
+          <IconButton
+            onPress={() => {
+              setEditMode(!editMode);
+            }}
+            icon={<MaterialIcons name="edit" size={24} />}
+          />
+        )}
+        {editMode == true && (
+          <IconButton
+            onPress={() => {
+              setEditMode(!editMode);
+            }}
+            icon={<MaterialIcons name="edit-off" size={24} />}
+          />
+        )}
+      </HStack>
+      <VStack space={4}>
+        {editMode == true && (
+          <HStack space={2}>
+            <Input
+              flex={1}
+              onChangeText={(v) => setInputValue(v)}
+              value={inputValue}
+              placeholder="Add Task"
+            />
+            <IconButton
+              borderRadius="sm"
+              variant="solid"
+              icon={
+                <Icon as={Feather} name="plus" size="sm" color="warmGray.50" />
+              }
+              onPress={() => {
+                setTasks((tasks) => [
+                  ...tasks,
+                  {
+                    name: inputValue,
+                    isCompleted: false,
+                    taskUUID: Math.round(Math.random() * 100),
+                  },
+                ]);
+                setInputValue("");
+              }}
+            />
+          </HStack>
+        )}
 
-//         <VStack space={2}>
-//           {tasks.map((task, index) => (
-//             <TaskItem
-//               key={index}
-//               tasks={tasks}
-//               setTasks={setTasks}
-//               task={task}
-//             />
-//           ))}
-//         </VStack>
-//       </VStack>
-//       {/* if save button is needed */}
-//     </Box>
-//   );
-// };
+        <VStack space={2}>
+          {tasks.map((task, index) => (
+            <TaskItem
+              key={index}
+              tasks={tasks}
+              setTasks={setTasks}
+              task={task}
+            />
+          ))}
+        </VStack>
+      </VStack>
+      {/* if save button is needed */}
+    </Box>
+  );
+};
 
 // export const TaskItem = (props) => {
 //   const { tasks, setTasks } = props;
@@ -419,35 +493,5 @@ export default Routine;
 //     </HStack>
 //   );
 // };
-
-export const Settings = (props) => {
-  const [showModal, setShowModal] = useState(false);
-
-  // useEffect(() => {
-  //   console.log("NEW ROUTINES", routines);
-  // }, [routines]);
-
-  // const deleteRoutine = () => {
-  //   let filteredArray = routines.filter((routine) => routine.UUID !== UUID);
-  //   setRoutines(filteredArray);
-  // };
-
-  return (
-    <>
-      <IconButton
-        onPress={() => setShowModal(true)}
-        icon={<Feather name="settings" size={24} color="black" />}
-      />
-
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.Body>
-            <Button>Delete</Button>
-          </Modal.Body>
-        </Modal.Content>
-      </Modal>
-    </>
-  );
-};
 
 // export default Routine;
