@@ -19,6 +19,8 @@
     "deploy-hosting": "npm run predeploy && firebase deploy --only hosting"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.2.0",
+    "@expo-google-fonts/rubik": "^0.2.0",
     "@react-aria/interactions": "^3.7.0",
     "@react-native-async-storage/async-storage": "~1.15.13",
     "@react-stately/checkbox": "^3.0.3",
@@ -28,6 +30,7 @@
     "@react-stately/toggle": "^3.2.3",
     "cnpm": "^7.1.0",
     "expo": "~43.0.3",
+    "expo-font": "~10.0.3",
     "expo-linear-gradient": "~10.0.3",
     "expo-status-bar": "~1.1.0",
     "jest": "24.1.0",
@@ -45,7 +48,8 @@
     "styled-components": "^5.3.3",
     "styled-system": "^5.1.5",
     "victory": "^36.2.0",
-    "yarn": "^1.22.17"
+    "yarn": "^1.22.17",
+    "expo-device": "~4.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Home from "./pages/Home";
+import React, { useState, useEffect, useContext } from "react";
+import Dashboard, { Example } from "./pages/Dashboard";
 import {
   Link,
   HStack,
@@ -9,6 +9,7 @@ import {
   Switch,
   Box,
   useColorMode,
+  ZStack,
   Input,
   NativeBaseProvider,
   extendTheme,
@@ -22,87 +23,103 @@ import {
   FlatList,
   Icon,
 } from "native-base";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo, Ionicons, AntDesign, Feather } from "@expo/vector-icons";
 import Tracker from "./pages/Tracker";
-
+import { DimensionsContext } from "./context/DimensionsContext";
+import { RouterContext } from "./context/RouterContext";
 const Router = () => {
-  const [page, setPage] = useState("Home");
-  const [previousPage, setPreviousPage] = useState("");
+  const [page, setPage] = useContext(RouterContext);
 
+  const Dim = useContext(DimensionsContext);
+  const { windowHeight, windowWidth } = Dim;
   return (
-    <Container w="100%" h="100%" flex="1">
-      <Box w="100%" h="100%" flex="1">
-        {page == "album" && <Tracker w="100%" h="100%" flex="1" />}
-
-        {page == "Navigation" && (
-          <Navigation
-            w="100%"
-            h="100%"
-            flex="1"
-            previousPage={previousPage}
-            page={page}
-            setPage={setPage}
-          />
-        )}
-
-        {page == "Home" && <Home w="100%" h="100%" flex="1" />}
-
-        <Menu
-          page={page}
-          setPage={setPage}
-          previousPage={previousPage}
-          setPreviousPage={setPreviousPage}
-          position="absolute"
-          bottom="40px"
-          left="50%"
-        />
-      </Box>
-    </Container>
+    <>
+      {page.currentPage == "access-alarm" && <Tracker />}
+      {page.currentPage == "navigation" && (
+        <Navigation w="100%" h="100%" flex="1" />
+      )}
+      {page.currentPage == "map" && <Dashboard />}
+    </>
   );
 };
 
 export const Menu = (props) => {
-  const { page, setPage, previousPage, setPreviousPage } = props;
+  const [page, setPage] = useContext(RouterContext);
 
-  useEffect(() => {
-    setPreviousPage(page);
-  }, []);
+  const Dim = useContext(DimensionsContext);
+  const { windowHeight, windowWidth } = Dim;
 
   return (
-    <HStack
-      bg="grey"
-      opacity="40%"
-      borderRadius="md"
-      w="150px"
-      position="absolute"
-      bottom="10%"
-      left="53%"
-      h="50px"
-      shadow={1}
-      justifyContent="space-evenly"
-    >
-      {/* <IconButton icon={<Icon as={Entypo} name="emoji-happy" />} /> */}
-      <IconButton
-        onPress={() => {
-          setPreviousPage(page);
-          setPage("Navigation");
-        }}
-        icon={<Icon as={Entypo} name="menu" />}
-      />
-    </HStack>
+    <>
+      <HStack
+        bg="#ffffff"
+        borderTopRadius="30"
+        w={windowWidth}
+        h="90px"
+        position="absolute"
+        bottom="0px"
+        shadow={20}
+        justifyContent="space-evenly"
+        alignItems="center"
+      >
+        <IconButton
+          onPress={() => {
+            setPage({ lastPage: page.currentPage, currentPage: "navigation" });
+          }}
+          icon={<Icon as={AntDesign} name="home" />}
+        />
+        {page.currentPage == "access-alarm" && (
+          <IconButton
+            onPress={() => {
+              setPage("calendar");
+            }}
+            icon={<Icon as={AntDesign} name="smileo" />}
+          />
+        )}
+        {page.currentPage == "access-alarm" && (
+          <IconButton
+            onPress={() => {
+              setPage("calendar");
+            }}
+            icon={<Icon as={AntDesign} name="piechart" />}
+          />
+        )}
+        {page.currentPage == "map" && (
+          <IconButton
+            onPress={() => {
+              setPage("calendar");
+            }}
+            icon={<Icon as={AntDesign} name="calendar" />}
+          />
+        )}
+        {page.currentPage == "map" && (
+          <IconButton
+            zIndex={-2}
+            onPress={() => {
+              setPage("reOrder");
+            }}
+            icon={<Icon as={AntDesign} name="retweet" />}
+          />
+        )}
+      </HStack>
+    </>
   );
 };
 
 export const Navigation = (props) => {
-  const { isOpen, onToggle } = useDisclose();
-  const { page, setPage, previousPage } = props;
+  const [page, setPage] = useContext(RouterContext);
 
+  const { isOpen, onToggle } = useDisclose();
+  const Dim = useContext(DimensionsContext);
+  const { windowHeight, windowWidth } = Dim;
+
+  // MaterialIcons
   const icons = [
     { name: "bolt", bg: "amber.600" },
     { name: "build", bg: "emerald.600" },
     { name: "cloud", bg: "blue.600" },
-    { name: "delivery-dining", bg: "orange.600" },
+    { name: "map", bg: "orange.600" },
     { name: "favorite", bg: "rose.600" },
     { name: "music-note", bg: "violet.600" },
     { name: "invert-colors-on", bg: "lime.600" },
@@ -123,79 +140,51 @@ export const Navigation = (props) => {
 
   return (
     <>
-      <Box safeAreaLeft Zindex={2}>
-        <IconButton
-          m="20px"
-          onPress={() => {
-            setPage(previousPage);
-          }}
-          icon={<Icon as={AntDesign} name="arrowleft" />}
-        />
-      </Box>
-
-      <Box
-        position="absolute"
-        left="50%"
-        mt="20px"
-        alignItems="center"
-        pt="8"
-        flex={1}
-      >
-        <Heading mb="40px" fontSize="lg">
-          Menu
-        </Heading>
-        <Input
-          placeholder="Search"
-          variant="filled"
-          width="100%"
-          bg="gray.100"
-          borderRadius="10"
-          py="1"
-          px="2"
-          placeholderTextColor="gray.500"
-          _hover={{ bg: "gray.200", borderWidth: 0 }}
-          borderWidth="0"
-          _web={{
-            _focus: { style: { boxShadow: "none" } },
-          }}
-          InputLeftElement={
-            <Icon
-              ml="2"
-              size="5"
-              color="gray.500"
-              as={<Ionicons name="ios-search" />}
-            />
-          }
-        />
-        <FlatList
-          mt="40px"
-          numColumns={4}
-          m={"-8px"}
-          data={icons}
-          renderItem={({ item }) => {
-            return (
-              <IconButton
-                m={"8px"}
-                borderRadius="full"
-                bg={item.bg}
-                variant="solid"
-                onPress={() => {
-                  setPage(item.name);
-                }}
-                p="3"
-                icon={
-                  <Icon
-                    color="white"
-                    name={item.name}
-                    as={MaterialIcons}
-                    size="sm"
-                  />
-                }
-              />
-            );
-          }}
-        />
-      </Box>
+      <Center h={windowHeight} w={windowWidth}>
+        <Box zIndex={-1} position="absolute" top="0px" left="0px" p="12px">
+          <IconButton
+            onPress={() => {
+              setPage({
+                lastPage: page.currentPage,
+                currentPage: page.lastPage,
+              });
+            }}
+            icon={<Icon as={AntDesign} name="back" />}
+          />
+        </Box>
+        <Box>
+          <FlatList
+            numColumns={4}
+            m={"-8px"}
+            data={icons}
+            renderItem={({ item }) => {
+              return (
+                <IconButton
+                  m={"8px"}
+                  borderRadius="full"
+                  bg={item.bg}
+                  variant="solid"
+                  onPress={() => {
+                    setPage({
+                      lastPage: page.lastPage,
+                      currentPage: item.name,
+                    });
+                  }}
+                  p="3"
+                  icon={
+                    <Icon
+                      color="white"
+                      name={item.name}
+                      as={MaterialIcons}
+                      size="sm"
+                    />
+                  }
+                />
+              );
+            }}
+          />
+        </Box>
+      </Center>
     </>
   );
 };
