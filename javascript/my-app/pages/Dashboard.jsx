@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import {
   NativeBaseProvider,
   Box,
@@ -30,19 +30,11 @@ import {
 
 import { Dimensions } from "react-native";
 import { Menu } from "../Router";
+import { DimensionsContext } from "../context/DimensionsContext";
 
 const Dashboard = (props) => {
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
-
-  const data = {
-    labels: ["Swim", "Bike", "Run", "Bike", "Run"], // optional
-    data: [0.4, 0.6, 0.8, 0.6, 0.8],
-  };
-  useEffect(() => {
-    console.log(windowWidth);
-    console.log(windowHeight);
-  }, []);
+  const Dim = useContext(DimensionsContext);
+  const { windowHeight, windowWidth } = Dim;
 
   return (
     <VStack bg="#3232e2" w={windowWidth} h={windowHeight}>
