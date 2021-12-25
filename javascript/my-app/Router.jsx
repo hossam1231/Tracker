@@ -57,6 +57,7 @@ export const Menu = (props) => {
         borderTopRadius="30"
         w={windowWidth}
         h="90px"
+        safeAreaBottom
         position="absolute"
         bottom="0px"
         shadow={20}

@@ -1,23 +1,16 @@
-{
-  /* <Box w="100" h="10%" flex="1">
-<ScrollView horizontal>
-{favourites.lenth > 0 && <Center> <VStack><Text>Add</Text></VStack> </Center>}
-
-</ScrollView>
-</Box> */
-}
-
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
   useDisclose,
   IconButton,
   ScrollView,
   VStack,
+  Button,
   Stagger,
   HStack,
   Icon,
   Input,
+  CheckIcon,
   Center,
   Badge,
   NativeBaseProvider,
@@ -33,6 +26,7 @@ export const Tracker = () => {
   const Dim = useContext(DimensionsContext);
   const { windowWidth, windowHeight } = Dim;
   const [createTracker, setCreateTracker] = useState();
+  const [trackers, setTrackers] = useState([]);
 
   return (
     <>
@@ -63,34 +57,31 @@ export const Tracker = () => {
                   <Text>See All</Text>
                 </Box>
               </HStack>
-              <ScrollView
-                _contentContainerStyle={{
-                  px: "10px",
-                  mb: "4",
-                  mt: "10px",
-                  minW: "72",
-                }}
-              >
-                <EachTracker />
-              </ScrollView>
+              <VStack space={2} w="100%" h="100%" flex="1" mb="10px" mt="10px">
+                {/* limit */}
+                {trackers.map(
+                  (tracker, index) =>
+                    index < 3 && <EachTracker tracker={tracker} index={index} />
+                )}
+              </VStack>
             </Box>
           </Box>
         )}
         {createTracker && (
           <Create
+            trackers={trackers}
+            setTrackers={setTrackers}
             createTracker={createTracker}
             setCreateTracker={setCreateTracker}
           />
         )}
       </VStack>
-      {!createTracker && <Menu />}
+      {!createTracker && <Menu safeAreaBottom />}
     </>
   );
 };
 
-export default Tracker;
-
-const ActiveTracker = () => {
+const ActiveTracker = (props) => {
   let active = "false";
 
   return (
@@ -138,7 +129,10 @@ const ActiveTracker = () => {
   );
 };
 
-const EachTracker = () => {
+const EachTracker = (props) => {
+  const { tracker } = props;
+  const { name, type } = tracker;
+
   return (
     <HStack
       borderRadius="12"
@@ -152,7 +146,7 @@ const EachTracker = () => {
       <VStack w="100%" justifyContent="space-between">
         <HStack alignItems="center" w="100%" justifyContent="space-between">
           <Text color="black" fontSize="2xl">
-            UI Design
+            {name}
           </Text>
 
           <Text color="black" fontSize="sm">
@@ -162,7 +156,7 @@ const EachTracker = () => {
 
         <HStack justifyContent="space-between">
           <HStack alignItems="center" mw="20px" space={2}>
-            <Badge>Hello</Badge>
+            <Badge>{type}</Badge>
             <Badge>Hello</Badge>
           </HStack>
           <IconButton
@@ -185,44 +179,188 @@ const EachTracker = () => {
   );
 };
 
+export const CreateTrackerSuccess = () => {
+  const Dim = useContext(DimensionsContext);
+  const { windowWidth, windowHeight } = Dim;
+
+  return (
+    <Center w={windowWidth} h={windowHeight}>
+      <HStack space={2}>
+        <CheckIcon size="5" mt="0.5" color="emerald.500" />
+        <Text color="emerald.500" fontSize="md">
+          Tracker Created Successfully
+        </Text>
+      </HStack>
+    </Center>
+  );
+};
+
 export const Create = (props) => {
   const Dim = useContext(DimensionsContext);
   const { windowWidth, windowHeight } = Dim;
-  const { createTacker, setCreateTracker } = props;
+  const { createTracker, setCreateTracker, trackers, setTrackers } = props;
+  const [completed, setCompleted] = useState(false);
+  const [name, setName] = useState();
+  let trackersCopy = [...trackers];
+
+  const handleChangeName = (event) => {
+    setName(event.target.value);
+    console.log(name);
+  };
+
+  const AddTracker = () => {
+    trackersCopy = [...trackersCopy, { name: name, type: createTracker }];
+    setTrackers(trackersCopy);
+    setCompleted(true);
+    setTimeout(() => {
+      setCreateTracker(false);
+    }, 2000);
+  };
 
   return (
     <VStack bg="#fbfafe" w={windowWidth} h={windowHeight}>
-      <Box mt="40px" p="20px">
-        <Text fontFamily="RubikMedium" fontSize="xl">
-          Type
-        </Text>
+      {!completed && (
+        <Box mt="40px" p="20px">
+          <Text fontFamily="RubikMedium" fontSize="xl">
+            Type
+          </Text>
 
-        <Box p="10px">
-          <ActiveTracker />
-        </Box>
-
-        <Box mt="10px">
-          <HStack alignItems="center" justifyContent="space-between"></HStack>
-          <ScrollView
-            _contentContainerStyle={{
-              px: "10px",
-              mb: "4",
-              mt: "10px",
-              minW: "72",
-            }}
+          <HStack
+            borderRadius="12"
+            mt="20px"
+            p="20px"
+            alignItems="center"
+            h="100px"
+            bg="black"
+            w="100%"
           >
-            <Text>Info</Text>
-            <Input
-              mx="3"
-              placeholder="name"
-              w={{
-                base: "75%",
-                md: "25%",
+            <VStack mr="20px">
+              {createTracker == "Counter" && (
+                <Icon
+                  as={MaterialCommunityIcons}
+                  name="counter"
+                  color="white"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                />
+              )}
+
+              {createTracker == "Pomadoro" && (
+                <Icon
+                  as={MaterialCommunityIcons}
+                  size="6"
+                  name="infinity"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                  color="warmGray.50"
+                />
+              )}
+              {createTracker == "Clock" && (
+                <Icon
+                  as={MaterialCommunityIcons}
+                  size="6"
+                  name="av-timer"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                  color="warmGray.50"
+                />
+              )}
+              {createTracker == "Instant" && (
+                <Icon
+                  as={MaterialIcons}
+                  size="6"
+                  name="bolt"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                  color="warmGray.50"
+                />
+              )}
+            </VStack>
+            <Center>
+              <VStack>
+                <Text fontFamily="RubikMedium" color="white" fontSize="2xl">
+                  {createTracker}
+                </Text>
+
+                {createTracker == "Timer" && (
+                  <Text fontFamily="RubikRegular" color="white" fontSize="lg">
+                    Time based tracker
+                  </Text>
+                )}
+
+                {createTracker == "Counter" && (
+                  <Text fontFamily="RubikRegular" color="white" fontSize="lg">
+                    Incremental based tracker
+                  </Text>
+                )}
+                {createTracker == "Instant" && (
+                  <Text fontFamily="RubikRegular" color="white" fontSize="lg">
+                    One off actions & tasks
+                  </Text>
+                )}
+                {createTracker == "Pomadoro" && (
+                  <Text fontFamily="RubikRegular" color="white" fontSize="lg">
+                    Inverval based regime
+                  </Text>
+                )}
+              </VStack>
+            </Center>
+          </HStack>
+
+          <Box mt="10px">
+            <HStack alignItems="center" justifyContent="space-between"></HStack>
+            <ScrollView
+              _contentContainerStyle={{
+                px: "10px",
+                mb: "4",
+                mt: "10px",
+                minW: "72",
               }}
-            />
-          </ScrollView>
+            >
+              <Text mb="20px" fontFamily="RubikMedium" fontSize="xl">
+                Info
+              </Text>
+              <Input
+                placeholder="name"
+                onChange={handleChangeName}
+                w={{
+                  base: "100%",
+                  md: "25%",
+                }}
+              />
+
+              <HStack
+                w="100%"
+                space={2}
+                mt="20px"
+                justifyContent="space-between"
+              >
+                <Button
+                  w="40%"
+                  onPress={() => {
+                    setCreateTracker(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  w="40%"
+                  onPress={() => {
+                    AddTracker();
+                  }}
+                >
+                  Create
+                </Button>
+              </HStack>
+            </ScrollView>
+          </Box>
         </Box>
-      </Box>
+      )}
+      <CreateTrackerSuccess />
     </VStack>
   );
 };
@@ -312,6 +450,9 @@ export const CreateButton = (props) => {
           size="lg"
           bg="yellow.400"
           colorScheme="yellow"
+          onPress={() => {
+            setCreateTracker("Instant");
+          }}
           borderRadius="full"
           icon={
             <Icon
@@ -332,6 +473,9 @@ export const CreateButton = (props) => {
           bg="teal.400"
           colorScheme="teal"
           borderRadius="full"
+          onPress={() => {
+            setCreateTracker("Clock");
+          }}
           icon={
             <Icon
               as={MaterialCommunityIcons}
@@ -349,6 +493,9 @@ export const CreateButton = (props) => {
           variant="solid"
           size="lg"
           bg="red.500"
+          onPress={() => {
+            setCreateTracker("Pomadoro");
+          }}
           colorScheme="red"
           borderRadius="full"
           icon={
@@ -367,3 +514,4 @@ export const CreateButton = (props) => {
     </HStack>
   );
 };
+export default Tracker;
