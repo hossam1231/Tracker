@@ -40,6 +40,7 @@ const Router = () => {
         <Navigation w="100%" h="100%" flex="1" />
       )}
       {page.currentPage == "map" && <Dashboard />}
+      {page.currentPage == "exploreTrackers" && <Dashboard />}
     </>
   );
 };
@@ -73,7 +74,10 @@ export const Menu = (props) => {
         {page.currentPage == "access-alarm" && (
           <IconButton
             onPress={() => {
-              setPage("calendar");
+              setPage({
+                lastPage: page.currentPage,
+                currentPage: "exploreTrackers",
+              });
             }}
             icon={<Icon as={AntDesign} name="smileo" />}
           />

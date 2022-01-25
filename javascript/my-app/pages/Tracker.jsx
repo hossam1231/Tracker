@@ -26,14 +26,17 @@ export const Tracker = () => {
   const Dim = useContext(DimensionsContext);
   const { windowWidth, windowHeight } = Dim;
   const [createTracker, setCreateTracker] = useState();
+  const [miniRouter, setMiniRouter] = useState({ page: "Home", menu: "Show" });
+
   const [trackers, setTrackers] = useState([]);
 
   return (
     <>
       <VStack bg="#fbfafe" w={windowWidth} h={windowHeight}>
-        {!createTracker && (
+        {miniRouter.page == "Home" && (
           <Box mt="40px" p="20px">
             <CreateButton
+              setMiniRouter={setMiniRouter}
               createTracker={createTracker}
               setCreateTracker={setCreateTracker}
             />
@@ -61,29 +64,40 @@ export const Tracker = () => {
                 {/* limit */}
                 {trackers.map(
                   (tracker, index) =>
-                    index < 3 && <EachTracker tracker={tracker} index={index} />
+                    index < 3 && (
+                      <EachTracker
+                        miniRouter={miniRouter}
+                        setMiniRouter={setMiniRouter}
+                        tracker={tracker}
+                        index={index}
+                      />
+                    )
                 )}
               </VStack>
             </Box>
           </Box>
         )}
-        {createTracker && (
+        {miniRouter.page == "CreateTracker" && (
           <Create
+            setMiniRouter={setMiniRouter}
             trackers={trackers}
             setTrackers={setTrackers}
             createTracker={createTracker}
             setCreateTracker={setCreateTracker}
           />
         )}
+
+        {miniRouter.page == "OpenTracker" && <ActiveTrackerOpen />}
       </VStack>
-      {!createTracker && <Menu safeAreaBottom />}
+      {miniRouter.menu == "Show" && <Menu safeAreaBottom />}
     </>
   );
 };
 
 const ActiveTracker = (props) => {
   let active = "false";
-
+  const Dim = useContext(DimensionsContext);
+  const { windowWidth, windowHeight } = Dim;
   return (
     <HStack
       borderRadius="12"
@@ -129,8 +143,49 @@ const ActiveTracker = (props) => {
   );
 };
 
+const ActiveTrackerOpen = () => {
+  const Dim = useContext(DimensionsContext);
+  const { windowWidth, windowHeight } = Dim;
+
+  return (
+    <>
+      <Center h={windowHeight} w={windowWidth}>
+        <Box zIndex={-1} position="absolute" top="0px" left="0px" p="12px">
+          <IconButton
+            onPress={() => {
+              setPage({
+                lastPage: page.currentPage,
+                currentPage: page.lastPage,
+              });
+            }}
+            icon={<Icon as={AntDesign} name="back" />}
+          />
+        </Box>
+        <Box>
+          <ProgressChart
+            width={screenWidth}
+            height={220}
+            data={0.3}
+            strokeWidth={16}
+            radius={32}
+            chartConfig={chartConfig}
+            hideLegend={false}
+          >
+            <Text>hello</Text>
+          </ProgressChart>
+
+          <VStack>
+            <Button>Finish</Button>
+            <Button>Leave</Button>
+          </VStack>
+        </Box>
+      </Center>
+    </>
+  );
+};
+
 const EachTracker = (props) => {
-  const { tracker } = props;
+  const { tracker, miniRouter, setMiniRouter } = props;
   const { name, type } = tracker;
 
   return (
@@ -162,6 +217,9 @@ const EachTracker = (props) => {
           <IconButton
             p="0"
             m="0"
+            onPress={() => {
+              setMiniRouter({ page: "OpenTracker", menu: "Hide" });
+            }}
             icon={
               <Icon
                 as={MaterialIcons}
@@ -198,7 +256,13 @@ export const CreateTrackerSuccess = () => {
 export const Create = (props) => {
   const Dim = useContext(DimensionsContext);
   const { windowWidth, windowHeight } = Dim;
-  const { createTracker, setCreateTracker, trackers, setTrackers } = props;
+  const {
+    createTracker,
+    setCreateTracker,
+    trackers,
+    setTrackers,
+    setMiniRouter,
+  } = props;
   const [completed, setCompleted] = useState(false);
   const [name, setName] = useState();
   let trackersCopy = [...trackers];
@@ -213,7 +277,7 @@ export const Create = (props) => {
     setTrackers(trackersCopy);
     setCompleted(true);
     setTimeout(() => {
-      setCreateTracker(false);
+      setMiniRouter({ page: "Home", Menu: "Show" });
     }, 2000);
   };
 
@@ -343,6 +407,7 @@ export const Create = (props) => {
                   w="40%"
                   onPress={() => {
                     setCreateTracker(false);
+                    setMiniRouter({ page: "Home", menu: "Show" });
                   }}
                 >
                   Cancel
@@ -366,7 +431,7 @@ export const Create = (props) => {
 };
 
 export const CreateButton = (props) => {
-  const { createTacker, setCreateTracker } = props;
+  const { createTacker, setCreateTracker, setMiniRouter } = props;
   const { isOpen, onToggle } = useDisclose();
   return (
     <HStack mb="20px" alignItems="center">
@@ -431,6 +496,7 @@ export const CreateButton = (props) => {
           borderRadius="full"
           onPress={() => {
             setCreateTracker("Counter");
+            setMiniRouter({ page: "CreateTracker", menu: "Hide" });
           }}
           icon={
             <Icon
@@ -452,6 +518,7 @@ export const CreateButton = (props) => {
           colorScheme="yellow"
           onPress={() => {
             setCreateTracker("Instant");
+            setMiniRouter({ page: "CreateTracker", menu: "Hide" });
           }}
           borderRadius="full"
           icon={
@@ -475,6 +542,7 @@ export const CreateButton = (props) => {
           borderRadius="full"
           onPress={() => {
             setCreateTracker("Clock");
+            setMiniRouter({ page: "CreateTracker", menu: "Hide" });
           }}
           icon={
             <Icon
@@ -495,6 +563,7 @@ export const CreateButton = (props) => {
           bg="red.500"
           onPress={() => {
             setCreateTracker("Pomadoro");
+            setMiniRouter({ page: "CreateTracker", menu: "Hide" });
           }}
           colorScheme="red"
           borderRadius="full"

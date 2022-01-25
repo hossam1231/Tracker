@@ -37,36 +37,17 @@ export default function App() {
     RubikRegular: require("./assets/fonts/Rubik-Regular.ttf"),
   });
 
-  return (
-    <>
-      {fontsLoaded && (
-        <NativeBaseProvider>
-          <DimensionsProvider>
-            <RouterProvider>
-              <Router w="100%" h="100%" flex="1" />
-            </RouterProvider>
-          </DimensionsProvider>
-        </NativeBaseProvider>
-      )}
-    </>
-  );
+  // return (
+  //   <>
+  //     {fontsLoaded && (
+  //       <NativeBaseProvider>
+  //         <DimensionsProvider>
+  //           <RouterProvider>
+  //             <Router w="100%" h="100%" flex="1" />
+  //           </RouterProvider>
+  //         </DimensionsProvider>
+  //       </NativeBaseProvider>
+  //     )}
+  //   </>
+  // );
 }
-
-{
-  /* <Text fontFamily=" Rubik_900Black">Hello</Text> */
-}
-
-//   if (!fontsLoaded) {
-//     return <Text>LOADING</Text>;
-//   } else { return (
-//     <NativeBaseProvider theme={theme}>
-//       <DimensionsProvider>
-//         <Text fontFamily=" Rubik_900Black">Hello</Text>
-
-//         {/* <Box w="100%" h="100%" flex="1">
-//           <Router w="100%" h="100%" flex="1" />
-//         </Box> */}
-//       </DimensionsProvider>
-//     </NativeBaseProvider>
-//   );
-// }
